@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Web — Dzaikra Nabhan Aulia Azmi</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Arial,Helvetica,sans-serif;color:#fff;background:#050914}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;visibility:hidden;transform:scale(.88) translateY(55px);transition:opacity .65s ease,transform .8s cubic-bezier(.22,1,.36,1),visibility .65s;pointer-events:none}
+.scene.active{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.bg{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 45%,#21427f 0,#0d1938 48%,#03050b 100%);z-index:-5}
+.bg:before{content:"";position:absolute;inset:-30%;background:repeating-radial-gradient(circle at 10% 10%,transparent 0 38px,rgba(255,255,255,.09) 40px 42px),repeating-conic-gradient(from 0deg at 10% 10%,transparent 0 29deg,rgba(255,255,255,.08) 30deg,transparent 31deg);animation:webmove 14s linear infinite}
+@keyframes webmove{to{transform:rotate(360deg) scale(1.08)}}
+.spider{font-size:clamp(70px,15vw,145px);filter:drop-shadow(0 16px 18px #0008);animation:float 2s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-16px) rotate(4deg)}}
+.card{width:min(680px,94vw);max-height:90vh;overflow:auto;padding:34px 26px;border:2px solid #ffffff22;border-radius:26px;text-align:center;background:linear-gradient(145deg,#182d59ee,#070d1dee);box-shadow:0 25px 80px #0009}
+.card::-webkit-scrollbar{width:0}
+h1{font-size:clamp(34px,8vw,78px);line-height:.98;margin:12px 0;color:#ff2638;text-shadow:4px 4px 0 #07112d,0 0 22px #ff263855}
+h2{font-size:clamp(24px,5vw,44px);color:#42aaff;text-shadow:3px 3px 0 #06112b}
+p{font-size:18px;line-height:1.75;margin:12px auto;max-width:610px}
+.red{color:#ff3347}.blue{color:#55b5ff}
+.btn{border:2px solid #ff3044;border-radius:9px;padding:14px 27px;background:linear-gradient(135deg,#ee1d31,#9d0016);color:white;font-weight:900;cursor:pointer;box-shadow:0 7px 0 #5c0009,0 15px 28px #0007;margin-top:18px;transition:.22s}
+.btn:hover{transform:translateY(-4px) scale(1.03)}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #5c0009}
+.web-card{position:relative;overflow:hidden}
+.web-card:after{content:"";position:absolute;inset:-50%;background:repeating-radial-gradient(circle at 50% 50%,transparent 0 35px,#fff1 37px 39px),repeating-conic-gradient(transparent 0 29deg,#fff1 30deg,transparent 31deg);animation:spin 18s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.photo{display:block;width:180px;height:240px;object-fit:cover;margin:20px auto;border:6px solid white;border-radius:12px;box-shadow:0 18px 40px #0008;transform:rotate(-2deg);animation:photoIn .9s cubic-bezier(.2,1.5,.4,1)}
+@keyframes photoIn{from{opacity:0;transform:scale(.3) rotate(-18deg)}to{opacity:1;transform:scale(1) rotate(-2deg)}}
+.story{font-size:clamp(21px,4.5vw,34px);font-weight:800;line-height:1.45;animation:reveal 1s ease}
+@keyframes reveal{from{opacity:0;letter-spacing:10px;transform:scale(.75)}to{opacity:1;letter-spacing:normal;transform:none}}
+.heart{font-size:95px;animation:beat 1.25s infinite}
+@keyframes beat{15%{transform:scale(1.2)}30%{transform:scale(1)}45%{transform:scale(1.13)}}
+.warning{font-size:clamp(32px,8vw,70px);font-weight:1000;color:#ff2638;animation:warning .55s infinite alternate}
+@keyframes warning{to{transform:scale(1.08)}}
+.gift{font-size:105px;animation:gift 1.5s infinite}
+@keyframes gift{50%{transform:translateY(-18px) rotate(5deg)}}
+.gopay-wrap{display:none;margin:18px auto 0;animation:pop .55s cubic-bezier(.2,1.5,.4,1)}
+.gopay-wrap.show{display:block}
+.gopay{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:18px;background:#00aed6;box-shadow:0 0 0 4px #fff2,0 12px 30px #00aed655;animation:gopayPulse 1.5s ease-in-out infinite}
+.gopay-mark{width:38px;height:38px;border-radius:50%;background:white;display:grid;place-items:center;color:#00a9d0;font-size:25px;font-weight:1000}
+.gopay-name{font-size:28px;font-weight:1000;letter-spacing:-1px}
+@keyframes gopayPulse{50%{transform:translateY(-5px) scale(1.04);box-shadow:0 0 0 7px #fff1,0 18px 40px #00aed655}}
+@keyframes pop{from{opacity:0;transform:scale(.4) rotate(-8deg)}to{opacity:1;transform:none}}
+.number{font-size:clamp(24px,6vw,34px);font-weight:900;letter-spacing:2px;color:#55b5ff}
+.confetti{position:fixed;top:-50px;z-index:1000;pointer-events:none;animation:fall 4s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.small{font-size:14px;opacity:.7}
+@media(max-width:500px){.card{padding:28px 18px}.card p{font-size:15px}.btn{padding:12px 20px}.photo{width:150px;height:200px}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<section class="scene active" id="s1">
+  <div style="text-align:center">
+    <div class="spider">🕷️</div>
+    <h2>HEY...</h2>
+    <h1>YOU GOT<br>A MESSAGE</h1>
+    <p>🕸️ Ada sesuatu yang harus lu lihat.</p>
+    <button class="btn" onclick="go(1)">OPEN MESSAGE →</button>
+  </div>
+</section>
+
+<section class="scene" id="s2">
+  <div style="text-align:center">
+    <div class="spider">🕷️</div>
+    <h1>YO! 🕷️</h1>
+    <p>Spider-Sense bilang... hari ini ada sesuatu yang spesial.</p>
+    <button class="btn" onclick="go(2)">WHAT IS IT? 👀</button>
+  </div>
+</section>
+
+<section class="scene" id="s3">
+  <div class="card web-card">
+    <div class="spider">🕷️</div>
+    <h1>IT'S MY<br>BIRTHDAY! 🎂</h1>
+    <p>Yup.</p>
+    <p>Hari ini gue resmi <strong class="blue">naik level satu tahun lagi.</strong></p>
+    <button class="btn" onclick="go(3)">NEXT 🕷️</button>
+  </div>
+</section>
+
+<section class="scene" id="s4">
+  <div class="card">
+    <h2>THE BIRTHDAY HERO</h2>
+    <img src="foto_3x4.png" class="photo" alt="Foto Dzaikra Nabhan Aulia Azmi">
+    <p><strong>With great birthday...</strong><br>comes great responsibility. 😂</p>
+    <button class="btn" onclick="go(4)">KEEP GOING →</button>
+  </div>
+</section>
+
+<section class="scene" id="s5">
+  <div style="text-align:center">
+    <div class="spider">🕷️</div>
+    <div class="story">
+      Satu tahun lagi...<br><br>
+      Satu cerita lagi.<br><br>
+      Satu langkah lagi menuju versi diri yang lebih baik.
+    </div>
+    <button class="btn" onclick="go(5)">NEXT →</button>
+  </div>
+</section>
+
+<section class="scene" id="s6">
+  <div class="card">
+    <div class="heart">❤️</div>
+    <h2>THANK YOU</h2>
+    <p>Buаt kalian yang selama ini udah hadir, nemenin ngobrol, ketawa bareng, bantuin gue, atau sekadar selalu ada...</p>
+    <h2>MAKASIH BANYAK. 💙</h2>
+    <button class="btn" onclick="go(6)">WAIT... 👀</button>
+  </div>
+</section>
+
+<section class="scene" id="s7">
+  <div style="text-align:center">
+    <div class="spider">🕷️</div>
+    <div class="warning">WAIT...</div>
+    <h2>ADA SATU HAL YANG HAMPIR LUPA.</h2>
+    <p>🕸️ Ini sebenarnya bukan cuma kartu ucapan biasa...</p>
+    <button class="btn" onclick="go(7)">WHAT?! 😳</button>
+  </div>
+</section>
+
+<section class="scene" id="s8">
+  <div class="card">
+    <div class="gift">🎁</div>
+    <h1>ABOUT THE GIFT...</h1>
+    <p>Kalian <strong>nggak perlu repot cari kado.</strong> 😂</p>
+    <p>Daripada bingung mau beli apa...</p>
+    <h2>TRANSFER AJA. 💸</h2>
+    <p>Praktis.<br>Cepat.<br>Pasti kepake.</p>
+    <button class="btn" onclick="showPay()">💸 LIHAT KADO</button>
+
+    <div class="gopay-wrap" id="pay">
+      <div class="gopay">
+        <div class="gopay-mark">G</div>
+        <div class="gopay-name">GoPay</div>
+      </div>
+      <p class="number">081224254710</p>
+      <p>a.n. <strong>Dzaikra Nabhan Aulia Azmi</strong></p>
+      <p class="small">Scan / transfer ke nomor di atas. Makasih banyak! 🕷️💙</p>
+    </div>
+
+    <button class="btn" onclick="go(8)">NEXT →</button>
+  </div>
+</section>
+
+<section class="scene" id="s9">
+  <div class="card">
+    <div class="spider">🕷️</div>
+    <h2>ONE LAST THING...</h2>
+    <p>Semoga di umur yang baru ini, gue bisa jadi orang yang lebih baik, lebih kuat, lebih bahagia, dan lebih dekat dengan semua hal yang gue impikan.</p>
+    <p><strong class="blue">Thanks for being part of my story. ❤️</strong></p>
+    <button class="btn" onclick="go(9)">FINAL SWING 🕷️</button>
+  </div>
+</section>
+
+<section class="scene" id="s10">
+  <div style="text-align:center">
+    <div class="spider">🕷️</div>
+    <h1>HAPPY<br>BIRTHDAY<br>TO ME! 🎂</h1>
+    <h2>🕸️🕷️❤️</h2>
+    <p>— <strong>Dzaikra Nabhan Aulia Azmi</strong></p>
+    <p><i>With great power comes great responsibility... and hopefully great money too. 💸😂</i></p>
+    <button class="btn" onclick="location.reload()">🔄 REPLAY</button>
+  </div>
+</section>
+
+<script>
+let current=1;
+
+function go(n){
+  const a=document.getElementById("s"+n);
+  const b=document.getElementById("s"+(n+1));
+  if(!b)return;
+  a.classList.remove("active");
+  setTimeout(()=>b.classList.add("active"),120);
+  current=n+1;
+  confetti();
+}
+
+function showPay(){
+  document.getElementById("pay").classList.toggle("show");
+  confetti();
+}
+
+function confetti(){
+  const items=["🕷️","🕸️","❤️","🔴","🔵","✨","🎉","🎊","🎂","💸"];
+  for(let i=0;i<32;i++){
+    setTimeout(()=>{
+      const c=document.createElement("div");
+      c.className="confetti";
+      c.textContent=items[Math.floor(Math.random()*items.length)];
+      c.style.left=Math.random()*100+"vw";
+      c.style.fontSize=(15+Math.random()*24)+"px";
+      c.style.animationDuration=(3+Math.random()*3)+"s";
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),6500);
+    },i*40);
+  }
+}
+
+document.addEventListener("keydown",e=>{
+  if(["ArrowRight","Enter"," "].includes(e.key) && current<10) go(current);
+});
+</script>
+</body>
+</html>
